@@ -11,7 +11,7 @@ namespace dk.mema.loop
 {
     public static class LoopTimerTrigger
     {
-        private const string TimerSchedule = "0 */2 * * * *";
+        private const string TimerSchedule = "0 */10 * * * *";
         private static HttpClient _client = new HttpClient();
 
         [FunctionName("LoopTimerTrigger")]
