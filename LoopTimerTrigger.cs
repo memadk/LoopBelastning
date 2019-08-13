@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.Documents;
 using Microsoft.Extensions.Logging;
 using HtmlAgilityPack;
 using System.Net.Http;
@@ -15,15 +16,35 @@ namespace dk.mema.loop
         private static HttpClient _client = new HttpClient();
 
         [FunctionName("LoopTimerTrigger")]
-        public static async Task RunAsync([TimerTrigger(TimerSchedule)]TimerInfo myTimer, ILogger log)
+        public static void Run([TimerTrigger(TimerSchedule)]TimerInfo myTimer, [CosmosDB(
+                databaseName: "Belastning",
+                collectionName: "belastning",
+                ConnectionStringSetting = "CosmosDBConnection")]out dynamic document, ILogger log)
+        {
+            var belastning = Task.Run(async () => await GetBelastning()).Result;
+            
+            document = new Belastning {
+                Timestamp = DateTime.Now,
+                Value = belastning
+            };
+
+            log.LogInformation($"C# Timer trigger function executed at: {document.Timestamp}");
+            log.LogInformation($"C# Timer trigger function: {document.Value}");
+        }
+
+        private static async Task<int> GetBelastning()
         {
             string html = await _client.GetStringAsync("https://loopfitness.com/da/aarhus-v/");
 	
 		    var text = html.Substring(html.IndexOf("new JustGage")+93, 5);
-		    var belastning = text.Substring(0, text.IndexOf(","));
-            
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            log.LogInformation($"C# Timer trigger function: {belastning}");
+		    var belastning = int.Parse(text.Substring(0, text.IndexOf(",")));
+
+            return belastning;
         }
+    }
+
+    public class Belastning{
+        public DateTime Timestamp {get;set;}
+        public int Value {get;set;}
     }
 }
