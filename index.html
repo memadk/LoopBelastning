@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+  <meta content="utf-8" http-equiv="encoding">
+  <title>Loop Fitness Aarhus V</title>
+
+  <style type="text/css">
+    body, html {
+      font-family: sans-serif;
+    }
+  </style>
+
+  <script src="https://visjs.github.io/vis-timeline/dist/vis-timeline-graph2d.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+  <link href="https://visjs.github.io/vis-timeline/dist/vis-timeline-graph2d.min.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<h2>Loop Fitness Aarhus V</h2>
+<br />
+<div id="visualization"></div>
+
+<script type="text/javascript">
+var container = document.getElementById('visualization');
+var dataPoints = new vis.DataSet();
+var options = { 
+        drawPoints: {
+            size: 3,
+            style: 'circle'
+        },
+        dataAxis: {
+            left: {
+                range: { 
+                    min: 0,
+                    max: 100
+                },
+                title: {
+                    text: 'Belastning'
+                }
+            }
+        }
+    };
+
+
+
+function updateData(data) {
+    dataPoints.clear();
+    for (var i = 0; i < data.length; i++) {
+		dataPoints.add({
+			x: new Date(data[i].date),
+			y: data[i].value
+		});
+	}
+    console.log('Update called');
+}
+
+$.getJSON("https://loopbelastning.azurewebsites.net/api/data", function(data) { 
+    updateData(data); 
+    var graf = new vis.Graph2d(container, dataPoints, options);    
+});
+
+window.setInterval(function(){
+    $.getJSON("https://loopbelastning.azurewebsites.net/api/data", updateData);
+}, 60000);
+
+  
+</script>
+</body>
+</html>
