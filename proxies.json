@@ -4,7 +4,7 @@
         "proxy1": {
             "matchCondition": {
                 "methods": [ "GET" ],
-                "route": "/"
+                "route": "/api/home"
             },
             "backendUri": "https://loopbelastning.z16.web.core.windows.net/"
         }
