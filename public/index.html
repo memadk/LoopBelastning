@@ -55,13 +55,13 @@ function updateData(data) {
     console.log('Update called');
 }
 
-$.getJSON("https://loopbelastning.azurewebsites.net/api/data", function(data) { 
+$.getJSON("https://loopbelastning.azurewebsites.net/api/data?FilterDay=1", function(data) { 
     updateData(data); 
     var graf = new vis.Graph2d(container, dataPoints, options);    
 });
 
 window.setInterval(function(){
-    $.getJSON("https://loopbelastning.azurewebsites.net/api/data", updateData);
+    $.getJSON("https://loopbelastning.azurewebsites.net/api/data?FilterDay=1", updateData);
 }, 600000);
 
   
