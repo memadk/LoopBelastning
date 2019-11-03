@@ -22,7 +22,12 @@ namespace dk.mema.loop
                 IEnumerable<Belastning> belastning,
             ILogger log)
         {
-            log.LogInformation("C# HTTP trigger function processed a request.");
+            var queryDict = req.GetQueryParameterDictionary();
+            if(queryDict.Keys.Contains("FilterDay"))
+            {
+                var filter = int.Parse(queryDict["FilterDay"]);
+                return (ActionResult)new OkObjectResult(belastning.Where(b => b.Timestamp.Day == filter).Select(b => new {date = b.Timestamp.Subtract(new DateTime(1970, 1,1)).TotalMilliseconds, value = b.Value}));
+            }
 
             return (ActionResult)new OkObjectResult(belastning.Select(b => new {date = b.Timestamp.Subtract(new DateTime(1970, 1,1)).TotalMilliseconds, value = b.Value}));
         }
