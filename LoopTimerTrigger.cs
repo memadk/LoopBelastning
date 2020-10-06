@@ -36,8 +36,8 @@ namespace dk.mema.loop
         {
             string html = await _client.GetStringAsync("https://loopfitness.com/da/aarhus-v/");
 	
-		    var text = html.Substring(html.IndexOf("new JustGage")+93, 5);
-		    var belastning = int.Parse(text.Substring(0, text.IndexOf(",")));
+		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">"), 8);
+		    var belastning = int.Parse(text.Substring(0, text.IndexOf("</")));
 
             return belastning;
         }
