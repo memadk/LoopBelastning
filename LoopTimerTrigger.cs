@@ -40,7 +40,7 @@ namespace dk.mema.loop
 		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">")+50, 8);
             log.LogInformation("The Substring: " + text);
 		    var belastning = int.Parse(text.Substring(0, text.IndexOf("%</")));
-            log.LogInformation("Belastning: " + belastning);
+            log.LogInformation("Parsed belastning: " + belastning);
 
             return belastning;
         }
