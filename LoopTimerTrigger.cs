@@ -34,7 +34,7 @@ namespace dk.mema.loop
 
         private static async Task<int> GetBelastning(ILogger log)
         {
-            string html = await _client.GetStringAsync("https://loopfitness.com/da/aarhus-v/");
+            string html = await _client.GetStringAsync("https://loopfitness.dk/centre/loop-fitness-aarhus-v/");
             log.LogInformation("Got HTML");
 	
 		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">")+50, 8);
