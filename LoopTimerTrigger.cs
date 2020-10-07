@@ -21,7 +21,7 @@ namespace dk.mema.loop
                 collectionName: "belastning",
                 ConnectionStringSetting = "CosmosDBConnection")]out dynamic document, ILogger log)
         {
-            var belastning = Task.Run(async () => await GetBelastning()).Result;
+            var belastning = Task.Run(async () => await GetBelastning(log)).Result;
             
             document = new Belastning {
                 Timestamp = DateTime.Now,
@@ -32,12 +32,15 @@ namespace dk.mema.loop
             log.LogInformation($"C# Timer trigger function: {document.Value}");
         }
 
-        private static async Task<int> GetBelastning()
+        private static async Task<int> GetBelastning(ILogger log)
         {
             string html = await _client.GetStringAsync("https://loopfitness.com/da/aarhus-v/");
+            log.LogInformation("Got HTML");
 	
-		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">"), 8);
+		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">")+50, 8);
+            log.LogInformation("The Substring: " + text);
 		    var belastning = int.Parse(text.Substring(0, text.IndexOf("%</")));
+            log.LogInformation("Belastning: " + belastning);
 
             return belastning;
         }
