@@ -42,7 +42,7 @@ var options = {
         }
     };
 
-var url = "https://loopbelastning.azurewebsites.net/api/data";
+var url = "https://loopbelastning.azurewebsites.net/api/data?NumberOfDays=7";
 
 function updateData(url) {
     $.getJSON(url, function(data) { 

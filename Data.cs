@@ -28,6 +28,11 @@ namespace dk.mema.loop
                 var filter = int.Parse(queryDict["FilterDay"]);
                 return (ActionResult)new OkObjectResult(belastning.Where(b => b.Timestamp.Day == filter).Select(b => new {date = b.Timestamp.Subtract(new DateTime(1970, 1,1)).TotalMilliseconds, value = b.Value}));
             }
+            if(queryDict.Keys.Contains("NumberOfDays"))
+            {
+                var filter = int.Parse(queryDict["NumberOfDays"]);
+                return (ActionResult)new OkObjectResult(belastning.Where(b => b.Timestamp.AddDays(filter) > DateTime.Now ).Select(b => new {date = b.Timestamp.Subtract(new DateTime(1970, 1,1)).TotalMilliseconds, value = b.Value}));
+            }
 
             return (ActionResult)new OkObjectResult(belastning.Select(b => new {date = b.Timestamp.Subtract(new DateTime(1970, 1,1)).TotalMilliseconds, value = b.Value}));
         }
