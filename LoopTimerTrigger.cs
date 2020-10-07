@@ -37,7 +37,7 @@ namespace dk.mema.loop
             string html = await _client.GetStringAsync("https://loopfitness.dk/centre/loop-fitness-aarhus-v/");
             log.LogInformation("Got HTML. Length: " + html.Length);
 	
-		    var text = html.Substring(html.IndexOf("<p class=\"overview-value ff-secondary bold para\">")+50, 8);
+		    var text = html.Substring(html.IndexOf("Belastning nu") + 78,10);
             log.LogInformation("The Substring: " + text);
 		    var belastning = int.Parse(text.Substring(0, text.IndexOf("%</")));
             log.LogInformation("Parsed belastning: " + belastning);
